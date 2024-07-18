@@ -11,11 +11,13 @@ const Display = (props: any) => {
 }
 const styles = StyleSheet.create({
     dsp: {
-      padding: 20,
+      padding: 10,
       backgroundColor: '#000'
     }, 
     txt: {
       color: '#fff',
+      backgroundColor: '#000',
+      padding: 10,
       fontSize: 30,
       textAlign: 'center'
     }

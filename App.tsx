@@ -1,39 +1,64 @@
-import {useState} from 'react'
-import { Text, View, StyleSheet } from 'react-native'
-import Btn from './components/Btn'
-import Display from './components/Display'
-
+import { useState } from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+import Btn from './components/Btn';
+import Display from './components/Display';
 
 export default function App() {
-  const [num, setNum] = useState(0)
+  const [calculation, setCalculation] = useState("");
+  const [result, setResult] = useState("0");
 
-  const dec = () => {
-    setNum(num - 1)
-  }
+  const handlePress = (value: any) => {
+    if (typeof value === "number" || value === ".") {
+      setCalculation(calculation + value);
+      setResult(eval(calculation + value).toString());
+    } else {
+      handleOperation(value);
+    }
+  };
 
-  const inc = () => {
-    setNum(num + 1)
-  }
+  const handleOperation = (value: any) => {
+    if (value === "C") {
+      setCalculation("");
+      setResult("0");
+    } else if (value === "=") {
+      setResult(eval(calculation).toString());
+    } else if (value === "<=") {
+      setCalculation(calculation.substring(0, calculation.length - 1));
+    } else {
+      setCalculation(calculation + value);
+    }
+  };
 
   return (
-    <>
     <View style={styles.container}>
-      <Text style={styles.paragraph}>
-        Contador
-      </Text>
-      <Display valor={num}/>
+      <Display valor={calculation} />
+      <Display valor={result} />
+      <View style={styles.btns}>
+        {["C", "(", ")", "/"].map((item) => (
+          <Btn key={item} label={item} onClick={() => handlePress(item === "/" ? "/" : item)} />
+        ))}
+      </View>
+      <View style={styles.btns}>
+        {["7", "8", "9", "*"].map((item) => (
+          <Btn key={item} label={item} onClick={() => handlePress(item === "*" ? "*" : item)} />
+        ))}
+      </View>
+      <View style={styles.btns}>
+        {["4", "5", "6", "-"].map((item) => (
+          <Btn key={item} label={item} onClick={() => handlePress(item === "-" ? "-" : item)} />
+        ))}
+      </View>
+      <View style={styles.btns}>
+        {["1", "2", "3", "+"].map((item) => (
+          <Btn key={item} label={item} onClick={() => handlePress(item === "+" ? "+": item)} />
+        ))}
+      </View>
+      <View style={styles.btns}>
+        {["0", ".", "<=" ,"="].map((item) => (
+          <Btn key={item} label={item} onClick={() => handlePress(item)} />
+        ))}
+      </View>
     </View>
-
-    <View style={styles.btns}>
-        <Btn style={styles.btn}
-             label="-" 
-             onClick={dec} 
-             />
-        <Btn label="+" 
-             onClick={inc} 
-             style={styles.btn}/>
-      </View> 
-    </>
   );
 }
 
@@ -42,6 +67,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 8,
+    backgroundColor: 'black'
   },
   paragraph: {
     margin: 24,
@@ -50,13 +76,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   btns: {
-    flex: 1,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between'
+    justifyContent: 'space-around',
+    margin: 0,
+    borderWidth: 1,
+    borderColor: '#fff'
   },
   btn: {
-    width: 20,
-  }
+    flex: 1,
+  },
 });
-
